@@ -11,7 +11,7 @@
           expressed much more clearly.
         - Is an actual IRL lambda calculus computer possible and would it be 
           like? (no not just an interpreter running on a regular computer)
-        - I'm going add those basic token now. 14:47
+        - I'm going add those basic token now. (14:47)
         - It seems john introduces syntax first but at least a couple of people 
           wanted to approach semantics. and moments later this was addressed :D.
         - woah just had a strong haskell flashback. we have functions and we
@@ -20,3 +20,5 @@
           they're not part of lambda calculus really. But later on we'll probably
           learn how that could be encoded using lambda calculus so that that plus
           equation can be
+
+    I probably wont have time to do much more for today.
