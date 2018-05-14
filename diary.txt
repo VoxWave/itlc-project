@@ -1,0 +1,3 @@
+14.5:
+    I was bit late to the lecture (10:2x ?) but I was present during most of it. I already have a fuzzy picture of what I want to do for my project (an interpreter).
+    I created this repo and file during the 1 hr break.
