@@ -22,3 +22,10 @@
           equation can be
 
     I probably wont have time to do much more for today.
+
+15.5 did nothing because of another course.
+
+16.5.
+lecture.
+
+excercise session. did ex 1.1 and then coded some more of the lexer.
