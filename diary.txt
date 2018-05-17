@@ -27,5 +27,5 @@
 
 16.5.
 lecture.
-
 excercise session. did ex 1.1 and then coded some more of the lexer.
+30 min book from 22:30
