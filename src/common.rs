@@ -62,3 +62,12 @@ impl<T> Sink<T> for Sender<T> {
         self.send(thing).unwrap();
     }
 }
+
+pub struct State<M, Sy>(pub fn(&mut M, Sy) -> State<M, Sy>);
+impl<M, Sy> Deref for State<M, Sy> {
+    type Target = fn(&mut M, Sy) -> State<M, Sy>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}

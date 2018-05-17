@@ -22,19 +22,33 @@ pub enum TokenType {
     Identifier(String),
 }
 
-struct Lexer {
-    token_sink: Sink<Result<Token, LexError>>
+struct Lexer<O>
+where
+    O: Sink<Result<Token, LexError>>
+{
+    token_sink: O
 }
 
-impl Lexer {
-    fn new(token_sink: Sink<Result<Token, LexError>>) -> Lexer {
+impl<O> Lexer<O> 
+where
+    O: Sink<Result<Token, LexError>>,
+{
+    fn new(token_sink: O) -> Lexer<O> {
         Lexer{
             token_sink,
         }
     }
 
-    fn run(char_source: Source<char>) {
-
+    fn run<I>(&mut self, char_source: I) 
+    where
+        I: Source<char>,
+    {
+        while let Some(c) = char_source.take() {
+            self.state = match self.state {
+                
+                _ => unimplemented!(),
+            }
+        }
     }
 }
 
