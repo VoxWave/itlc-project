@@ -4,6 +4,7 @@ use std::collections::VecDeque;
 use std::sync::mpsc::Sender;
 use std::ops::Deref;
 
+#[derive(Debug, PartialEq)]
 pub enum Direction {
     Left,
     Right,
@@ -19,6 +20,16 @@ pub trait Source<T> {
 
 impl<T> Source<T> for Vec<T> {
     fn take(&mut self) -> Option<T> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(self.remove(0))
+        }
+    }
+}
+
+impl Source<char> for String {
+    fn take(&mut self) -> Option<char> {
         if self.is_empty() {
             None
         } else {
@@ -52,6 +63,12 @@ impl<T> Sink<T> for Vec<T> {
 }
 
 impl<T> Sink<T> for VecDeque<T> {
+    fn put(&mut self, thing: T) {
+        self.push_back(thing);
+    }
+}
+
+impl<'a, T> Sink<T> for &'a mut VecDeque<T> {
     fn put(&mut self, thing: T) {
         self.push_back(thing);
     }
