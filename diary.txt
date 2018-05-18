@@ -36,3 +36,5 @@ excercise session. did ex 1.1 and then coded some more of the lexer.
 18.5
 Arrived to the lecture 10:36 and stayed until the end.
 15 mins of coding the project during the break.
+
+13:00-15:53 coded the project during the excercise session.
