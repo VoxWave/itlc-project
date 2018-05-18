@@ -26,7 +26,8 @@ struct Lexer<O>
 where
     O: Sink<Result<Token, LexError>>
 {
-    token_sink: O
+    token_sink: O,
+    state: State(Self::normal),
 }
 
 impl<O> Lexer<O> 
@@ -44,11 +45,14 @@ where
         I: Source<char>,
     {
         while let Some(c) = char_source.take() {
-            self.state = match self.state {
-                
-                _ => unimplemented!(),
+            self.state = self.state(c);
+            match c {
+                '\n' => {
+                    self.row += 1;
+                    self.column = 0; 
+                },
+                _ => self.column += 1,
             }
-        }
     }
 }
 
