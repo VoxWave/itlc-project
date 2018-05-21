@@ -41,3 +41,8 @@ Arrived to the lecture 10:36 and stayed until the end.
 
 20.5
 Somewhere around 50-55 mins of first adding some tests to the project and then reading the book.
+
+21.5
+I arrived to the lecture at 11:00.
+Coded tests during the excercise session up until 16:00.
+

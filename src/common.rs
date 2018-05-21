@@ -1,8 +1,7 @@
-
-use std::sync::mpsc::Receiver;
 use std::collections::VecDeque;
-use std::sync::mpsc::Sender;
 use std::ops::Deref;
+use std::sync::mpsc::Receiver;
+use std::sync::mpsc::Sender;
 
 #[derive(Debug, PartialEq)]
 pub enum Direction {
