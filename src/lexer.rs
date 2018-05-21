@@ -206,7 +206,7 @@ enum LexError {
 }
 
 #[test]
-fn lex_test_1() {
+fn basic_expression_lex_test() {
     use std::collections::VecDeque;
     let mut sink = VecDeque::new();
     {
@@ -220,4 +220,32 @@ fn lex_test_1() {
     expected.push_back(Ok(Token::new(TokenType::Dot, Position::new(Point::new(0, 2), Point::new(0, 2)))));
     expected.push_back(Ok(Token::new(TokenType::Identifier("x".into()), Position::new(Point::new(0, 3), Point::new(0, 3)))));
     assert_eq!(sink, expected);
+}
+
+#[test]
+fn basic_expression_with_non_unicode_lambda_lex_test() {
+    use std::collections::VecDeque;
+    let mut sink = VecDeque::new();
+    {
+        let mut lexer = Lexer::new(&mut sink);
+        let raw = r#"\x.x"#;
+        let string = String::from(raw);
+        lexer.run(string);
+    }
+    let mut expected = VecDeque::new();
+    expected.push_back(Ok(Token::new(TokenType::Lambda, Position::new(Point::new(0, 0), Point::new(0, 0)))));
+    expected.push_back(Ok(Token::new(TokenType::Identifier("x".into()), Position::new(Point::new(0, 1), Point::new(0, 1)))));
+    expected.push_back(Ok(Token::new(TokenType::Dot, Position::new(Point::new(0, 2), Point::new(0, 2)))));
+    expected.push_back(Ok(Token::new(TokenType::Identifier("x".into()), Position::new(Point::new(0, 3), Point::new(0, 3)))));
+    assert_eq!(sink, expected);
+}
+
+#[test]
+fn multi_character_identifier_test() {
+    use std::collections::VecDeque;
+    let mut sink = VecDeque::new();
+    {
+        let mut lexer = Lexer::new(&mut sink);
+        let string = String::from("λxy.xyz");
+    }
 }

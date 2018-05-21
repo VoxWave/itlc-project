@@ -9,7 +9,7 @@
         - It seems that if a system is minimal then expressing complex things 
           gets messy but if a system is complex then some complex things are 
           expressed much more clearly.
-        - Is an actual IRL lambda calculus computer possible and would it be 
+        - Is an actual IRL lambda calculus computer possible and what would it be 
           like? (no not just an interpreter running on a regular computer)
         - I'm going add those basic token now. (14:47)
         - It seems john introduces syntax first but at least a couple of people 
@@ -19,7 +19,7 @@
         - wait where was the plus defined? ah I see. We can just use things but
           they're not part of lambda calculus really. But later on we'll probably
           learn how that could be encoded using lambda calculus so that that plus
-          equation can be
+          equation can be defined
 
     I probably wont have time to do much more for today.
 
@@ -38,3 +38,6 @@ Arrived to the lecture 10:36 and stayed until the end.
 15 mins of coding the project during the break.
 
 13:00-15:53 coded the project during the excercise session.
+
+20.5
+Somewhere around 50-55 mins of first adding some tests to the project and then reading the book.
