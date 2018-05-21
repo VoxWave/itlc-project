@@ -242,8 +242,10 @@ mod test {
         let expected = construct_expected!(
             TokenType::Lambda, (0, 0), (0, 0);
             TokenType::Identifier("xy".into()), (0, 1), (0, 2);
+            TokenType::Dot, (0, 3), (0, 3);
+            TokenType::Identifier("xyz".into()), (0, 4), (0, 6);
         );
-        lex_and_assert("λxy.xyz", expected);
+        lex_and_assert("λxy.xyz", &expected);
     }
 
     #[test]
@@ -389,7 +391,12 @@ mod test {
             Dot, (1, 2), (1, 2);
             Bracket(Left), (1, 3), (1, 3);
             Lambda, (2, 4), (2, 4);
-            Identifier("x".into()), (2, 5), (2, 5);
+            Identifier("y".into()), (2, 5), (2, 5);
+            Dot, (2, 6), (2, 6);
+            Identifier("x".into()), (3, 8), (3, 8);
+            Identifier("y".into()), (4, 8), (4, 8);
+            Bracket(Right), (5, 0), (5, 0);
+            Identifier("z".into()), (5, 1), (5, 1);
         );
         lex_and_assert(
 r#"
@@ -400,7 +407,7 @@ r#"
 )z
 "#
 , 
-            expected
+            &expected
         );
     }
 
