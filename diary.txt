@@ -46,3 +46,6 @@ Somewhere around 50-55 mins of first adding some tests to the project and then r
 I arrived to the lecture at 11:00.
 Coded tests during the excercise session up until 16:00.
 
+22.5
+arrived 15 minutes late to the lecture.
+Did 52 minutes of project (parser).
