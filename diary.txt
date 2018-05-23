@@ -48,4 +48,30 @@ Coded tests during the excercise session up until 16:00.
 
 22.5
 arrived 15 minutes late to the lecture.
-Did 52 minutes of project (parser).
+Did a 52 minute session of coding the project (parser).
+
+13:53 arrived.
+
+Grading of the lecturer:
+4?
+Not a perfect grade but very good. maybe even somewhere between 4 and 5 if 
+using floats instead of integers are allowed.
+
+Pros:
+  Explains things very well when he has thought things through.
+  Engaged the audience quite well.
+  I appreciate the flexibility of the course very much.
+
+Cons:
+  Quite often there where he had not thought about a thing as much as he 
+  had assumed which resulted in the pacing of the lectures breaking a bit.
+
+  The pacing of the lectures was not though out throughouly since it seemed
+  the lectures were almost always behind what he thought should be 
+  
+  There were mistakes in the slides quite often too. Though this kept the
+  audience on their toes. Had the audience been full of more passive people
+  this would have been a bigger con.
+
+All in all I think most of the cons result from the course being rather
+experimental. I think he's on a track to become a very good lecturer.
