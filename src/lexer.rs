@@ -202,7 +202,7 @@ where
 }
 
 #[derive(Debug, PartialEq)]
-enum LexError {
+pub enum LexError {
     IdentifierError(String, Position),
     InvalidCharacterError(char, Position),
 }
