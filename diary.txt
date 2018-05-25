@@ -45,4 +45,4 @@ Somewhere around 50-55 mins of first adding some tests to the project and then r
 21.5
 I arrived to the lecture at 11:00.
 Coded tests during the excercise session up until 16:00.
-
+about 15 min of finishing the tests and merging
