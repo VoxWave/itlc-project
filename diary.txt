@@ -64,7 +64,22 @@ I'll probably read more later today.
 
 28.5 
 57 min of coding overall(a bit of it extended to the next day actually).
-
+main progress:
+    - I realized I don't need to buffer up individual tokens because I can use the
+      states to store the necessary information for parsing.
+      I also brought back the parse_stack but with the token vec removed
+      for the same reason as above. the stack is used as memory to know 
+      on which subexpression level we are on so that we can form the ast
+      as we eat up more tokens.
+    - I started to flesh out the normal and lambda states.
+      normal is the initial state of the machine and depending on the
+      token we move on to other states. I also think that the parser
+      will return to normal state when a subexpression begins.
+      lamda state just expects an identifier and then moves on to a 
+      state that expects a dot or another identifier which will begin
+      another lambda expression.
+I realized updating the diary and creating the commit probably bumps
+the time spent to 1 hr.
 
 Grading of the lecturer:
 4?
