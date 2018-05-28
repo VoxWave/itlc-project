@@ -62,6 +62,9 @@ enough on what I've been doing so I'll try to elaborate more. I haven't got very
 far in the book yet. Just now I got to the recursive definition of lambda calculus.
 I'll probably read more later today.
 
+28.5 
+57 min of coding overall(a bit of it extended to the next day actually).
+
 
 Grading of the lecturer:
 4?

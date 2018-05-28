@@ -3,8 +3,8 @@ use std::fmt;
 
 #[derive(PartialEq)]
 pub struct Token {
-    token_type: TokenType,
-    position: Position,
+    pub token_type: TokenType,
+    pub position: Position,
 }
 
 impl Token {
