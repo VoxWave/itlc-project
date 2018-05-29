@@ -87,6 +87,25 @@ What I got stuck on is how I want to handle identifiers during normal parsing.
 Do I create a Incomplete::Expressions right away with the first identifier or do
 I store it to an optional field? I think I'll figure it out today.
 
+1 hr and 25 minutes worth of coding (there were breaks between but those are
+not counted in the time). I did figure it out. I initialize the parse stack with one
+Incomplete::Expressions when parsing. incomplete lambda also has a vec of expressions
+so that there's always a place to put the variable expression.
+the parser also now checks whether an vec of expressions only has one expression and
+then doesn't create an application out of that (Expression::Application was called Expressions earlier)
+but instead just moves the expression inside that vec up to the next Incomplete.
+
+I should also probably explain the basic idea with the parser and the parse_stack.
+If we encounter a thing that can have things inside it we create a new incomplete and
+push it on the stack. lambdas and brackets are these. when a closing thing comes up
+(right bracket or the tokens run out) we take the incomplete on top of the stack.
+convert it to an expression (as it it's now complete) and then put it in the incomplete
+that's above it. This way we sort of dive into subexpression levels as they start and
+when they start closing up we start swimming up and also bring back what we found in the dive.
+this will eventually form the AST.
+
+it took me 8 or more minutes to write the journal entry.
+
 
 Grading of the lecturer:
 4?
