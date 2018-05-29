@@ -1,5 +1,5 @@
 use common::{Direction, Sink, Source, State};
-use lexer::{LexError, Token, TokenType, Position};
+use lexer::{LexError, Position, Token, TokenType};
 
 enum Expression {
     Expressions(Vec<Expression>),
@@ -20,7 +20,7 @@ where
     parse_stack: Vec<Incomplete>,
 }
 
-impl<O> Parser<O> 
+impl<O> Parser<O>
 where
     O: Sink<Result<Expression, ParserError>>,
 {
@@ -31,7 +31,7 @@ where
         }
     }
 
-    fn run<I>(&mut self, mut token_source: I) 
+    fn run<I>(&mut self, mut token_source: I)
     where
         I: Source<Result<Token, LexError>>,
     {
@@ -55,15 +55,15 @@ where
     }
 
     fn print_errors<I>(&mut self, mut token_source: I)
-    where 
+    where
         I: Source<Result<Token, LexError>>,
     {
         while let Some(r) = token_source.take() {
             match r {
                 Err(err) => {
                     println!("{:?}", err);
-                },
-                _ => {},
+                }
+                _ => {}
             }
         }
         panic!("Lexing failed. Aborting");
@@ -71,14 +71,13 @@ where
 
     fn normal(&mut self, t: Token) -> State<Parser<O>, Token> {
         match t.token_type {
-            TokenType::Bracket(Direction::Left) => {},
-            TokenType::Bracket(Direction::Right) => {},
+            TokenType::Bracket(Direction::Left) => {}
+            TokenType::Bracket(Direction::Right) => {}
             TokenType::Dot => {
-                let msg = "A dot was found without a lambda".to_string();
-                let error = ParserError::UnexpectedDot(msg, t.position);
-                self.expression_sink.put(Err(error));
-            },
-            TokenType::Identifier(s) => {},
+                println!("A dot was found without a lambda at {:?}", t.position);
+                panic!();
+            }
+            TokenType::Identifier(s) => {}
             TokenType::Lambda => State(Self::lambda),
         }
         State(Self::normal)
@@ -86,19 +85,30 @@ where
 
     fn lambda(&mut self, t: Token) -> State<Parser<O>, Token> {
         match t.token_type {
-            TokenType::Identifier => {},
+            TokenType::Identifier(s) => {
+                self.parse_stack.push(Incomplete::Lambda(s));
+                State(Self::expect_dot_or_identifier)
+            }
             _ => {
-                let msg = format!("an identifier was expected after a lamda but {:?} was found instead.", t);
-                let error = ParserError::InvalidLambdaSyntax(msg, t.position);
-                self.expression_sink.push(Err(error));
-            },
+                println!("an identifier was expected after a lamda");
+                println!("found {:?} instead.", t);
+                panic!();
+            }
         }
     }
 
-    fn expect_dot_or_identifier()
-}
-
-enum ParserError {
-    UnexpectedDot(String, Position),
-    InvalidLambdaSyntax(String, Position),
+    fn expect_dot_or_identifier(&mut self, t: Token) -> State<Parser<O>, Token> {
+        match t.token_type {
+            TokenType::Dot => State(Self::normal),
+            TokenType::Identifier(s) => {
+                self.parse_stack.push(Incomplete::Lambda(s));
+                State(Self::expect_dot_or_identifier)
+            }
+            _ => {
+                println!("a dot or an identifier was expected after a lambda and an identifier");
+                println!("found {:?} instead.", t);
+                panic!();
+            }
+        }
+    }
 }

@@ -81,6 +81,13 @@ main progress:
 I realized updating the diary and creating the commit probably bumps
 the time spent to 1 hr.
 
+29.5
+45 minute session of coding the project. I'm still working on the parser.
+What I got stuck on is how I want to handle identifiers during normal parsing.
+Do I create a Incomplete::Expressions right away with the first identifier or do
+I store it to an optional field? I think I'll figure it out today.
+
+
 Grading of the lecturer:
 4?
 Not a perfect grade but very good. maybe even somewhere between 4 and 5 if 

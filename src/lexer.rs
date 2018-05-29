@@ -154,10 +154,6 @@ where
 
     fn identifier(&mut self, c: char) -> State<Lexer<O>, char> {
         match c {
-            c if c.is_alphanumeric() => {
-                self.buffer.push(c);
-                State(Self::identifier)
-            }
             c if c.is_whitespace() || c == '\\' || c == 'λ' || c == '(' || c == ')'
                 || c == '.' =>
             {
@@ -169,6 +165,10 @@ where
                 let token = Token::new(token_type, position);
                 self.token_sink.put(Ok(token));
                 self.normal(c)
+            }
+            c if c.is_alphanumeric() => {
+                self.buffer.push(c);
+                State(Self::identifier)
             }
             _ => {
                 let position = self.get_current_position();
@@ -383,8 +383,8 @@ mod test {
 
     #[test]
     fn lex_multiline_expression() {
-        use self::TokenType::*;
         use self::Direction::*;
+        use self::TokenType::*;
         let expected = construct_expected!(
             Lambda, (1, 0), (1, 0);
             Identifier("x".into()), (1, 1), (1, 1);
@@ -399,15 +399,14 @@ mod test {
             Identifier("z".into()), (5, 1), (5, 1);
         );
         lex_and_assert(
-r#"
+            r#"
 λx.(
     λy.
         x
         y
 )z
-"#
-, 
-            &expected
+"#,
+            &expected,
         );
     }
 
