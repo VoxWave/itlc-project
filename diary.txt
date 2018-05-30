@@ -111,6 +111,9 @@ it took me 8 or more minutes to write the journal entry.
 
 1 hr 21 minutes. Actually finished the parser. I copied the lexer test and now I'm converting them to test the parser. looks like I
 just might be able to finish the project. I just need to implement a print for Expression and then do the beta-reduction(?) interpreter.
+I think the last thing before sleeping is just finishing the tests.
+
+15 minutes of tests.
 
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just

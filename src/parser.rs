@@ -262,52 +262,45 @@ mod test {
 
     #[test]
     #[should_panic]
-    fn try_parse_unicode_lambda() {
+    fn try_to_parse_unicode_lambda() {
         lex_and_parse_only("λ");
     }
 
     #[test]
     #[should_panic]
-    fn try_parse_non_unicode_lambda() {
+    fn try_to_parse_non_unicode_lambda() {
         lex_and_parse_only("\\");
     }
 
     #[test]
     #[should_panic]
-    fn lex_dot() {
+    fn try_to_parse_dot() {
         lex_and_parse_only(".");
     }
 
-//     #[test]
-//     fn lex_left_parenthesis() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Bracket(Direction::Left),
-//             Position::new(Point::new(0, 0), Point::new(0, 0)),
-//         )));
-//         lex_and_assert("(", &expected)
-//     }
+    #[test]
+    #[should_panic]
+    fn try_to_parse_left_parenthesis() {
+        lex_and_parse_only("(");
+    }
 
-//     #[test]
-//     fn lex_right_parenthesis() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Bracket(Direction::Right),
-//             Position::new(Point::new(0, 0), Point::new(0, 0)),
-//         )));
-//         lex_and_assert(")", &expected)
-//     }
+    #[test]
+    #[should_panic]
+    fn try_to_parse_right_parenthesis() {
+        lex_and_parse_only(")");
+    }
 
-//     #[test]
-//     fn lex_x_variable() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Identifier("x".into()),
-//             Position::new(Point::new(0, 0), Point::new(0, 0)),
-//         )));
-//         lex_and_assert("x", &expected)
-//     }
+    #[test]
+    fn parse_x_variable() {
+        let expected = Expression::Variable("x".into());
+        lex_parse_and_assert("x", expected);
+    }
 
+    #[test]
+    fn parse_x0_variable() {
+        let expected = Expression::Variable("x0".into());
+        lex_parse_and_assert("x0", expected);
+    }
 //     #[test]
 //     fn lex_x0_variable() {
 //         let mut expected = VecDeque::new();
