@@ -1,6 +1,7 @@
 use common::{Direction, Sink, Source, State};
 use lexer::{LexError, Position, Token, TokenType};
 
+#[derive(Debug, PartialEq)]
 enum Expression {
     Application(Vec<Expression>),
     Lambda(String, Box<Expression>),
@@ -12,7 +13,7 @@ enum Incomplete {
     Lambda(String, Vec<Expression>),
 }
 
-struct Parser
+pub struct Parser
 {
     parse_stack: Vec<Incomplete>,
 }
@@ -53,7 +54,13 @@ impl Parser
         loop {
             if self.parse_stack.len() == 1 {
                 if let Incomplete::Expressions(v) = self.parse_stack.pop().unwrap() {
-                    return Self::convert_to_expression(v).unwrap();
+                    match Self::convert_to_expression(v) {
+                        Some(e) => return e,
+                        None => {
+                            println!("expression was empty");
+                            panic!();
+                        },
+                    }
                 } else {
                     unreachable!();
                 }
@@ -196,14 +203,52 @@ impl Parser
     }
 }
 
-// #[cfg(test)]
-// mod test {
+#[cfg(test)]
+mod test {
+    use std::collections::VecDeque;
+    use super::{Parser, Expression};
+    use lexer::Lexer;
 
-//     #[test]
-//     fn multi_character_identifier_test() {
+    fn lex_parse_and_assert(string_slice: &str, expected: Expression) {
+        let mut tokens = VecDeque::new();
+        {
+            let mut lexer = Lexer::new(&mut tokens);
+            lexer.run(string_slice.to_string());
+        }
+        let mut parser = Parser::new();
+        let expression = parser.run(tokens);
+        assert_eq!(expression, expected);
+    }
 
-//         lex_parse_and_assert("λxy.xyz", &expected);
-//     }
+    #[test]
+    fn nested_lambda() {
+        let expected = Expression::Lambda("x".into(), 
+            Box::new(
+                Expression::Lambda("y".into(), 
+                    Box::new(
+                        Expression::Application(
+                            vec![
+                                Expression::Variable("x".into()),
+                                Expression::Variable("y".into()),
+                                Expression::Variable("z".into()),
+                            ]
+                        )
+                    )
+                )
+            )
+        );
+        lex_parse_and_assert("λx y.x y z", expected);
+    }
+
+    #[test]
+    fn single_lambda() {
+        let expected = Expression::Lambda("xy".into(),
+            Box::new(
+                Expression::Variable("xyz".into())
+            )
+        );
+        lex_parse_and_assert("λxy.xyz", expected);
+    }
 
 //     #[test]
 //     fn lex_unicode_lambda() {
@@ -366,4 +411,4 @@ impl Parser
 //             &expected,
 //         );
 //     }
-// }
+}

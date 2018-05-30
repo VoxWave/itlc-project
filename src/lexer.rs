@@ -65,7 +65,7 @@ pub enum TokenType {
     Identifier(String),
 }
 
-struct Lexer<O>
+pub struct Lexer<O>
 where
     O: Sink<Result<Token, LexError>>,
 {
@@ -80,7 +80,7 @@ impl<O> Lexer<O>
 where
     O: Sink<Result<Token, LexError>>,
 {
-    fn new(token_sink: O) -> Lexer<O> {
+    pub fn new(token_sink: O) -> Lexer<O> {
         Lexer {
             token_sink,
             buffer: String::new(),
@@ -90,7 +90,7 @@ where
         }
     }
 
-    fn run<I>(&mut self, mut char_source: I)
+    pub fn run<I>(&mut self, mut char_source: I)
     where
         I: Source<char>,
     {
@@ -235,6 +235,16 @@ mod test {
             lexer.run(string_slice.to_string());
         }
         assert_eq!(sink, *expected);
+    }
+
+    #[test]
+    fn identifier_lambda_identifier() {
+        let expected = construct_expected!(
+            TokenType::Identifier("xy".into()), (0, 0), (0, 1);
+            TokenType::Lambda, (0, 2), (0, 2);
+            TokenType::Identifier("xy".into()), (0, 3), (0, 4);
+        );
+        lex_and_assert("xyλxy", &expected);
     }
 
     #[test]
