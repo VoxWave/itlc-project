@@ -50,7 +50,27 @@ impl Parser
     }
 
     fn construct_expression(&mut self) -> Expression {
-        Expression::Variable(String::from("placeholder"))
+        loop {
+            if self.parse_stack.len() == 1 {
+                if let Incomplete::Expressions(v) = self.parse_stack.pop().unwrap() {
+                    return Self::convert_to_expression(v).unwrap();
+                } else {
+                    unreachable!();
+                }
+            } else if self.parse_stack.len() > 1 {
+                match self.parse_stack.pop().unwrap() {
+                    Incomplete::Lambda(i, mut v) => {
+                        self.bubble_up_expression(Some(i), v);
+                    }
+                    Incomplete::Expressions(_) => {
+                        println!("a closing bracket is missing");
+                        panic!();
+                    }
+                }
+            } else {
+                unreachable!();
+            }
+        }
     }
 
     fn print_errors<I>(&mut self, mut token_source: I)
@@ -120,7 +140,7 @@ impl Parser
         let inner_expression = match Self::convert_to_expression(v) {
             Some(e) => e,
             None => {
-                println!("and expression in parenthesis was empty. {:?}", t.position);
+                println!("an expression in parenthesis was empty.");
                 panic!();
             },
         };
@@ -175,3 +195,175 @@ impl Parser
         }
     }
 }
+
+// #[cfg(test)]
+// mod test {
+
+//     #[test]
+//     fn multi_character_identifier_test() {
+
+//         lex_parse_and_assert("λxy.xyz", &expected);
+//     }
+
+//     #[test]
+//     fn lex_unicode_lambda() {
+//         let expected = construct_expected!(
+//             TokenType::Lambda, (0, 0), (0, 0);
+//         );
+//         lex_and_assert("λ", &expected);
+//     }
+
+//     #[test]
+//     fn lex_non_unicode_lambda() {
+//         let expected = construct_expected!(
+//             TokenType::Lambda, (0, 0), (0, 0);
+//         );
+//         lex_and_assert("\\", &expected);
+//     }
+
+//     #[test]
+//     fn lex_dot() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Dot,
+//             Position::new(Point::new(0, 0), Point::new(0, 0)),
+//         )));
+//         lex_and_assert(".", &expected)
+//     }
+
+//     #[test]
+//     fn lex_left_parenthesis() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Bracket(Direction::Left),
+//             Position::new(Point::new(0, 0), Point::new(0, 0)),
+//         )));
+//         lex_and_assert("(", &expected)
+//     }
+
+//     #[test]
+//     fn lex_right_parenthesis() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Bracket(Direction::Right),
+//             Position::new(Point::new(0, 0), Point::new(0, 0)),
+//         )));
+//         lex_and_assert(")", &expected)
+//     }
+
+//     #[test]
+//     fn lex_x_variable() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Identifier("x".into()),
+//             Position::new(Point::new(0, 0), Point::new(0, 0)),
+//         )));
+//         lex_and_assert("x", &expected)
+//     }
+
+//     #[test]
+//     fn lex_x0_variable() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Identifier("x0".into()),
+//             Position::new(Point::new(0, 0), Point::new(0, 1)),
+//         )));
+//         lex_and_assert("x0", &expected)
+//     }
+
+//     #[test]
+//     fn lex_x1_variable() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Identifier("x1".into()),
+//             Position::new(Point::new(0, 0), Point::new(0, 1)),
+//         )));
+//         lex_and_assert("x1", &expected)
+//     }
+
+//     #[test]
+//     fn lex_x2_variable() {
+//         let mut expected = VecDeque::new();
+//         expected.push_back(Ok(Token::new(
+//             TokenType::Identifier("x2".into()),
+//             Position::new(Point::new(0, 0), Point::new(0, 1)),
+//         )));
+//         lex_and_assert("x2", &expected)
+//     }
+
+//     #[test]
+//     fn lex_lambda_x_dot_m_in_parenthesis() {
+//         let expected = construct_expected!(
+//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
+//             TokenType::Lambda, (0, 1), (0, 1);
+//             TokenType::Identifier("x".into()), (0, 2), (0, 2);
+//             TokenType::Dot, (0, 3), (0, 3);
+//             TokenType::Identifier("M".into()), (0, 4), (0, 4);
+//             TokenType::Bracket(Direction::Right), (0, 5), (0, 5);
+//         );
+//         lex_and_assert("(λx.M)", &expected);
+//         lex_and_assert("(\\x.M)", &expected);
+//     }
+
+//     #[test]
+//     fn lex_m_n_application_in_parenthesis() {
+//         let expected = construct_expected!(
+//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
+//             TokenType::Identifier("M".into()), (0, 1), (0, 1);
+//             TokenType::Identifier("N".into()), (0, 3), (0, 3);
+//             TokenType::Bracket(Direction::Right), (0, 4), (0, 4);
+//         );
+//         lex_and_assert("(M N)", &expected)
+//     }
+
+//     #[test]
+//     fn lex_mn_variable_in_parenthesis() {
+//         let expected = construct_expected!(
+//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
+//             TokenType::Identifier("MN".into()), (0, 1), (0, 2);
+//             TokenType::Bracket(Direction::Right), (0, 3), (0, 3);
+//         );
+//         lex_and_assert("(MN)", &expected)
+//     }
+
+//     #[test]
+//     fn lex_lambda_x_dot_x() {
+//         let expected = construct_expected!(
+//             TokenType::Lambda, (0, 0), (0, 0);
+//             TokenType::Identifier("x".into()), (0, 1), (0, 1);
+//             TokenType::Dot, (0, 2), (0, 2);
+//             TokenType::Identifier("x".into()), (0, 3), (0, 3);
+//         );
+//         lex_and_assert("λx.x", &expected);
+//         lex_and_assert("\\x.x", &expected);
+//     }
+
+//     #[test]
+//     fn lex_multiline_expression() {
+//         use self::Direction::*;
+//         use self::TokenType::*;
+//         let expected = construct_expected!(
+//             Lambda, (1, 0), (1, 0);
+//             Identifier("x".into()), (1, 1), (1, 1);
+//             Dot, (1, 2), (1, 2);
+//             Bracket(Left), (1, 3), (1, 3);
+//             Lambda, (2, 4), (2, 4);
+//             Identifier("y".into()), (2, 5), (2, 5);
+//             Dot, (2, 6), (2, 6);
+//             Identifier("x".into()), (3, 8), (3, 8);
+//             Identifier("y".into()), (4, 8), (4, 8);
+//             Bracket(Right), (5, 0), (5, 0);
+//             Identifier("z".into()), (5, 1), (5, 1);
+//         );
+//         lex_and_assert(
+//             r#"
+// λx.(
+//     λy.
+//         x
+//         y
+// )z
+// "#,
+//             &expected,
+//         );
+//     }
+// }
