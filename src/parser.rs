@@ -219,6 +219,16 @@ mod test {
         let expression = parser.run(tokens);
         assert_eq!(expression, expected);
     }
+    
+    fn lex_and_parse_only(string_slice: &str) {
+        let mut tokens = VecDeque::new();
+        {
+            let mut lexer = Lexer::new(&mut tokens);
+            lexer.run(string_slice.to_string());
+        }
+        let mut parser = Parser::new();
+        let expression = parser.run(tokens);
+    }
 
     #[test]
     fn nested_lambda() {
@@ -241,7 +251,7 @@ mod test {
     }
 
     #[test]
-    fn single_lambda() {
+    fn single_lambda_expression() {
         let expected = Expression::Lambda("xy".into(),
             Box::new(
                 Expression::Variable("xyz".into())
@@ -250,31 +260,23 @@ mod test {
         lex_parse_and_assert("λxy.xyz", expected);
     }
 
-//     #[test]
-//     fn lex_unicode_lambda() {
-//         let expected = construct_expected!(
-//             TokenType::Lambda, (0, 0), (0, 0);
-//         );
-//         lex_and_assert("λ", &expected);
-//     }
+    #[test]
+    #[should_panic]
+    fn try_parse_unicode_lambda() {
+        lex_and_parse_only("λ");
+    }
 
-//     #[test]
-//     fn lex_non_unicode_lambda() {
-//         let expected = construct_expected!(
-//             TokenType::Lambda, (0, 0), (0, 0);
-//         );
-//         lex_and_assert("\\", &expected);
-//     }
+    #[test]
+    #[should_panic]
+    fn try_parse_non_unicode_lambda() {
+        lex_and_parse_only("\\");
+    }
 
-//     #[test]
-//     fn lex_dot() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Dot,
-//             Position::new(Point::new(0, 0), Point::new(0, 0)),
-//         )));
-//         lex_and_assert(".", &expected)
-//     }
+    #[test]
+    #[should_panic]
+    fn lex_dot() {
+        lex_and_parse_only(".");
+    }
 
 //     #[test]
 //     fn lex_left_parenthesis() {

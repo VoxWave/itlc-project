@@ -109,6 +109,9 @@ it took me 8 or more minutes to write the journal entry.
 30.5
 1 hr 12 minutes of coding the project. The parser seems to be done. Now I only need to test it and then move on to the intepreter.
 
+1 hr 21 minutes. Actually finished the parser. I copied the lexer test and now I'm converting them to test the parser. looks like I
+just might be able to finish the project. I just need to implement a print for Expression and then do the beta-reduction(?) interpreter.
+
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
 means that I reseted the timer in between and possibly slacked off for a longer period of time)
