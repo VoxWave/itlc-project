@@ -58,7 +58,7 @@ somewhere between there.
 
 25.5
 reading the book for 26 minutes. I realized I probably haven't been descriptive
-enough on what I've been doing so I'll try to elaborate more. I haven't got very
+enough on what I've been doing so I'll try to elaborate more from now on. I haven't got very
 far in the book yet. Just now I got to the recursive definition of lambda calculus.
 I'll probably read more later today.
 
@@ -106,11 +106,18 @@ this will eventually form the AST.
 
 it took me 8 or more minutes to write the journal entry.
 
+30.5
+1 hr 12 minutes of coding the project. The parser seems to be done. Now I only need to test it and then move on to the intepreter.
+
+(I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
+I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
+means that I reseted the timer in between and possibly slacked off for a longer period of time)
 
 Grading of the lecturer:
 4?
 Not a perfect grade but very good. maybe even somewhere between 4 and 5 if 
 using floats instead of integers is allowed.
+edit: now that I think about it, a perfect score isn't needed to get a 5. so 5.
 
 Pros:
   Explains things very well when he has thought things through.

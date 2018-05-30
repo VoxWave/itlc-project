@@ -76,28 +76,23 @@ impl Parser
                 State(Self::normal)
             }
             TokenType::Bracket(Direction::Right) => {
-                if self.parse_stack.len() > 1 {
-                    let incomplete = self.parse_stack.pop().unwrap();
-                    match incomplete {
-                        Incomplete::Expressions(v) => {
-                            let expression = if v.len() > 1 {
-                                Expression::Application(v)
-                            } else if let Some(e) = v.pop() {
-                                e
-                            } else {
-                                return State(Self::normal);
-                            };
-                            match self.parse_stack.pop().unwrap() {
-                                Incomplete::Expressions(e) => e.push()
-                                Incomplete::Lambda(_, e) => {},
-                            }
-                        },
-                        Incomplete::Lambda(i, v) => {},
+                loop{
+                    if self.parse_stack.len() > 1 {
+                        match self.parse_stack.pop().unwrap() {
+                            Incomplete::Expressions(mut v) => {
+                                self.bubble_up_expression(None, v);
+                                break;
+                            },
+                            Incomplete::Lambda(i, mut v) => {
+                                self.bubble_up_expression(Some(i), v);
+                            },
+                        }
+                    } else {
+                        println!("Unexpected closing bracket at {:?}", t.position);
+                        panic!();
                     }
-                } else {
-                    println!("Unexpected closing bracket at {:?}", t.position);
-                    panic!();
                 }
+                State(Self::normal)
             }
             TokenType::Dot => {
                 println!("A dot was found without a lambda at {:?}", t.position);
@@ -106,8 +101,8 @@ impl Parser
             TokenType::Identifier(s) => {
                 let expression = Expression::Variable(s);
                 match self.parse_stack.pop() {
-                    Some(incomplete) => {
-                        match incomplete {
+                    Some(mut incomplete) => {
+                        match &mut incomplete {
                             Incomplete::Expressions(v) => v.push(expression),
                             Incomplete::Lambda(_, v) => v.push(expression),
                         }
@@ -118,6 +113,36 @@ impl Parser
                 State(Self::normal)
             },
             TokenType::Lambda => State(Self::lambda),
+        }
+    }
+
+    fn bubble_up_expression(&mut self, lambda_identifier: Option<String>, mut v: Vec<Expression>) {
+        let inner_expression = match Self::convert_to_expression(v) {
+            Some(e) => e,
+            None => {
+                println!("and expression in parenthesis was empty. {:?}", t.position);
+                panic!();
+            },
+        };
+        let expression = match lambda_identifier {
+            Some(i) => Expression::Lambda(i, Box::new(inner_expression)),
+            None => inner_expression,
+        };
+        let mut incomplete = self.parse_stack.pop().unwrap();
+        match &mut incomplete {
+            Incomplete::Expressions(e) => e.push(expression),
+            Incomplete::Lambda(_, e) => e.push(expression),
+        }
+        self.parse_stack.push(incomplete);
+    }
+
+    fn convert_to_expression(mut v: Vec<Expression>) -> Option<Expression> {
+        if v.len() > 1 {
+            Some(Expression::Application(v))
+        } else if let Some(e) = v.pop() {
+            Some(e)
+        } else {
+            None
         }
     }
 
