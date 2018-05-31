@@ -126,7 +126,12 @@ do with the interpreter.
 
 20 minutes for first function of interpreter. forgot to time it...
 
-
+1 hr 15 minutes. I got the renaming, alpha conversion and substitution done with a little guidance from delma.
+Mainly I haven't gotten very deep in the book and I wasn't able to infer everything I need from the slides so
+I needed delmas help on what exactly were the sub parts of beta reduction and what I needed to do in each of them.
+I had a fuzzy picture of what was supposed to happen but I didn't remember the specifics. In the end he just showed
+me the function signatures and maybe gave some explanation on what it was supposed to do and from there I was able to figure out
+the implementation myself. 
 
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just

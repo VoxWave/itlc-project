@@ -114,6 +114,6 @@ fn substitute(
     }
 }
 
-fn beta_reduce(expr: Expression,) -> Expression {
+// fn beta_reduce(expr: Expression,) -> Expression {
 
-}
+// }
