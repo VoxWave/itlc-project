@@ -2,7 +2,7 @@ use common::{Direction, Sink, Source, State};
 use lexer::{LexError, Position, Token, TokenType};
 
 #[derive(Debug, PartialEq)]
-enum Expression {
+pub enum Expression {
     Application(Vec<Expression>),
     Lambda(String, Box<Expression>),
     Variable(String),
