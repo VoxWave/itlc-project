@@ -114,6 +114,26 @@ fn substitute(
     }
 }
 
-// fn beta_reduce(expr: Expression,) -> Expression {
-
-// }
+fn beta_reduce(expr: Expression, name_gen: &mut NameGen) -> Option<Expression> {
+    match expr {
+            Expression::Application(mut v) => {
+                if let Expression::Lambda(i, e) = v[0].clone() {
+                    v[0] = substitute(*e, i, v[1].clone(), name_gen);
+                    v.remove(1);
+                    Some(Expression::Application(v))
+                } else {
+                    for i in 0..v.len() {
+                        if let Some(e) = beta_reduce(v[i].clone(), name_gen) {
+                            v[i] = e;
+                            return Some(Expression::Application(v));
+                        }
+                    }
+                    None
+                }
+            },
+        Expression::Lambda(i, e) => {
+            
+        },
+        Expression::Variable(i) => None,
+    }
+}

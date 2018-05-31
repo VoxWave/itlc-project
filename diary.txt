@@ -133,6 +133,29 @@ I had a fuzzy picture of what was supposed to happen but I didn't remember the s
 me the function signatures and maybe gave some explanation on what it was supposed to do and from there I was able to figure out
 the implementation myself. 
 
+1 hr 3 minutes of coding. I got the one third of the beta reduction logic done. The deadline is closing in so I though I would wrap
+up the course and write the last diary entry. So the project at the deadline is almost complete but not runable. I hope the code is
+interesting to look at.
+
+For this last entry I think it is appropriate to do a retrospective on the whole course.
+
+What have I actually learned:
+    - What lambda calculus is at least on a basic level 
+      (You have expressions that can be contructed with certain rules. You have rules for how you can transform an expression into another 
+      and there are expressions that can't be transformed any further. If you start applying these rules over and over what you're doing
+      starts to look like computation. In fact sometimes an untransformable (beta-normal) form can't be achieved and you can't create an
+      algorithm that would tell you for all lambda expressions if that expression reduces to a beta-normal form(halting problem). I do quite
+      agree with the lecturer that lambda calculus is kind of the machine language of functional programming)
+    - How I can implement a interpreter for lambda calculus
+    - psytrance works for me as coding music.
+    - I don't need caffeine.
+
+There's probably more I've learned but I'm a bit tired. Overall this was a very fun course and I feel like I didn't go away empty handed.
+23 minutes to write the last diary entry.
+
+
+
+
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
 means that I reseted the timer in between and possibly slacked off for a longer period of time)
