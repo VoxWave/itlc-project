@@ -301,109 +301,114 @@ mod test {
         let expected = Expression::Variable("x0".into());
         lex_parse_and_assert("x0", expected);
     }
-//     #[test]
-//     fn lex_x0_variable() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Identifier("x0".into()),
-//             Position::new(Point::new(0, 0), Point::new(0, 1)),
-//         )));
-//         lex_and_assert("x0", &expected)
-//     }
 
-//     #[test]
-//     fn lex_x1_variable() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Identifier("x1".into()),
-//             Position::new(Point::new(0, 0), Point::new(0, 1)),
-//         )));
-//         lex_and_assert("x1", &expected)
-//     }
+    #[test]
+    fn parse_x1_variable() {
+        let expected = Expression::Variable("x1".into());
+        lex_parse_and_assert("x1", expected);
+    }
 
-//     #[test]
-//     fn lex_x2_variable() {
-//         let mut expected = VecDeque::new();
-//         expected.push_back(Ok(Token::new(
-//             TokenType::Identifier("x2".into()),
-//             Position::new(Point::new(0, 0), Point::new(0, 1)),
-//         )));
-//         lex_and_assert("x2", &expected)
-//     }
+    #[test]
+    fn parse_x2_in_parenthesis() {
+        let expected = Expression::Variable("x2".into());
+        lex_parse_and_assert("(((((x2)))))", expected);
+    }
 
-//     #[test]
-//     fn lex_lambda_x_dot_m_in_parenthesis() {
-//         let expected = construct_expected!(
-//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
-//             TokenType::Lambda, (0, 1), (0, 1);
-//             TokenType::Identifier("x".into()), (0, 2), (0, 2);
-//             TokenType::Dot, (0, 3), (0, 3);
-//             TokenType::Identifier("M".into()), (0, 4), (0, 4);
-//             TokenType::Bracket(Direction::Right), (0, 5), (0, 5);
-//         );
-//         lex_and_assert("(λx.M)", &expected);
-//         lex_and_assert("(\\x.M)", &expected);
-//     }
+    #[test]
+    fn parse_lambda_x_dot_m_in_parenthesis() {
+        let expected = Expression::Lambda("x".into(),
+            Box::new(
+                Expression::Variable("M".into()),
+            )
+        );
+        lex_parse_and_assert("(λx.M)", expected);
+    }
 
-//     #[test]
-//     fn lex_m_n_application_in_parenthesis() {
-//         let expected = construct_expected!(
-//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
-//             TokenType::Identifier("M".into()), (0, 1), (0, 1);
-//             TokenType::Identifier("N".into()), (0, 3), (0, 3);
-//             TokenType::Bracket(Direction::Right), (0, 4), (0, 4);
-//         );
-//         lex_and_assert("(M N)", &expected)
-//     }
+    #[test]
+    fn parse_m_n_application_in_parenthesis() {
+        let expected = Expression::Application(
+            vec![
+                Expression::Variable("M".into()),
+                Expression::Variable("N".into()),
+            ]
+        );
+        lex_parse_and_assert("(M N)", expected);
+    }
 
-//     #[test]
-//     fn lex_mn_variable_in_parenthesis() {
-//         let expected = construct_expected!(
-//             TokenType::Bracket(Direction::Left), (0, 0), (0, 0);
-//             TokenType::Identifier("MN".into()), (0, 1), (0, 2);
-//             TokenType::Bracket(Direction::Right), (0, 3), (0, 3);
-//         );
-//         lex_and_assert("(MN)", &expected)
-//     }
+    #[test]
+    fn parse_mn_variable_in_parenthesis() {
+        let expected = Expression::Variable("MN".into());
+        lex_parse_and_assert("(MN)", expected);
+    }
 
-//     #[test]
-//     fn lex_lambda_x_dot_x() {
-//         let expected = construct_expected!(
-//             TokenType::Lambda, (0, 0), (0, 0);
-//             TokenType::Identifier("x".into()), (0, 1), (0, 1);
-//             TokenType::Dot, (0, 2), (0, 2);
-//             TokenType::Identifier("x".into()), (0, 3), (0, 3);
-//         );
-//         lex_and_assert("λx.x", &expected);
-//         lex_and_assert("\\x.x", &expected);
-//     }
+    #[test]
+    fn parse_lamda_x_dot_x() {
+        let expected = Expression::Lambda("x".into(),
+            Box::new(
+                Expression::Variable("x".into())
+            )
+        );
+        lex_parse_and_assert("λx.x", expected);
+    }
 
-//     #[test]
-//     fn lex_multiline_expression() {
-//         use self::Direction::*;
-//         use self::TokenType::*;
-//         let expected = construct_expected!(
-//             Lambda, (1, 0), (1, 0);
-//             Identifier("x".into()), (1, 1), (1, 1);
-//             Dot, (1, 2), (1, 2);
-//             Bracket(Left), (1, 3), (1, 3);
-//             Lambda, (2, 4), (2, 4);
-//             Identifier("y".into()), (2, 5), (2, 5);
-//             Dot, (2, 6), (2, 6);
-//             Identifier("x".into()), (3, 8), (3, 8);
-//             Identifier("y".into()), (4, 8), (4, 8);
-//             Bracket(Right), (5, 0), (5, 0);
-//             Identifier("z".into()), (5, 1), (5, 1);
-//         );
-//         lex_and_assert(
-//             r#"
-// λx.(
-//     λy.
-//         x
-//         y
-// )z
-// "#,
-//             &expected,
-//         );
-//     }
+    #[test]
+    #[should_panic]
+    fn multiline_expression_with_the_wrong_expected_tree() {
+        let expected = Expression::Application(
+            vec![
+                Expression::Lambda("x".into(),
+                    Box::new(
+                        Expression::Lambda("y".into(),
+                            Box::new(
+                                Expression::Application(
+                                    vec![
+                                        Expression::Variable("x".into()),
+                                        Expression::Variable("y".into()),
+                                    ]
+                                )
+                            )
+                        )
+                    )
+                ),
+                Expression::Variable("z".into()),
+            ]
+        );
+        lex_parse_and_assert(r#"
+λx.(
+    λy.
+        x
+        y
+)z
+"#, expected);
+    }
+
+    #[test]
+    fn parse_multiline_expression() {
+        let expected = Expression::Lambda("x".into(),
+            Box::new(
+                Expression::Application(
+                    vec![
+                        Expression::Lambda("y".into(),
+                            Box::new(
+                                Expression::Application(
+                                    vec![
+                                        Expression::Variable("x".into()),
+                                        Expression::Variable("y".into()),
+                                    ]
+                                )
+                            )
+                        ),
+                        Expression::Variable("z".into()),
+                    ]
+                )
+            )
+        );
+        lex_parse_and_assert(r#"
+λx.(
+    λy.
+        x
+        y
+)z
+"#, expected);
+    }
 }
