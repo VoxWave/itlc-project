@@ -124,6 +124,10 @@ So it seems I got the parser done with one take. Now I just need to do the inter
 59 minutes of reading the slides and conversing with delma trying to actually make sense on what exactly are the things I need to 
 do with the interpreter.
 
+20 minutes for first function of interpreter. forgot to time it...
+
+
+
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
 means that I reseted the timer in between and possibly slacked off for a longer period of time)
