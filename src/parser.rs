@@ -1,7 +1,7 @@
 use common::{Direction, Sink, Source, State};
 use lexer::{LexError, Position, Token, TokenType};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Expression {
     Application(Vec<Expression>),
     Lambda(String, Box<Expression>),
@@ -13,13 +13,11 @@ enum Incomplete {
     Lambda(String, Vec<Expression>),
 }
 
-pub struct Parser
-{
+pub struct Parser {
     parse_stack: Vec<Incomplete>,
 }
 
-impl Parser
-{
+impl Parser {
     fn new() -> Parser {
         Parser {
             parse_stack: vec![Incomplete::Expressions(Vec::new())],
@@ -59,7 +57,7 @@ impl Parser
                         None => {
                             println!("expression was empty");
                             panic!();
-                        },
+                        }
                     }
                 } else {
                     unreachable!();
@@ -103,16 +101,16 @@ impl Parser
                 State(Self::normal)
             }
             TokenType::Bracket(Direction::Right) => {
-                loop{
+                loop {
                     if self.parse_stack.len() > 1 {
                         match self.parse_stack.pop().unwrap() {
                             Incomplete::Expressions(mut v) => {
                                 self.bubble_up_expression(None, v);
                                 break;
-                            },
+                            }
                             Incomplete::Lambda(i, mut v) => {
                                 self.bubble_up_expression(Some(i), v);
-                            },
+                            }
                         }
                     } else {
                         println!("Unexpected closing bracket at {:?}", t.position);
@@ -134,11 +132,11 @@ impl Parser
                             Incomplete::Lambda(_, v) => v.push(expression),
                         }
                         self.parse_stack.push(incomplete);
-                    },
+                    }
                     None => unreachable!(),
                 }
                 State(Self::normal)
-            },
+            }
             TokenType::Lambda => State(Self::lambda),
         }
     }
@@ -149,7 +147,7 @@ impl Parser
             None => {
                 println!("an expression in parenthesis was empty.");
                 panic!();
-            },
+            }
         };
         let expression = match lambda_identifier {
             Some(i) => Expression::Lambda(i, Box::new(inner_expression)),
@@ -205,9 +203,9 @@ impl Parser
 
 #[cfg(test)]
 mod test {
-    use std::collections::VecDeque;
-    use super::{Parser, Expression};
+    use super::{Expression, Parser};
     use lexer::Lexer;
+    use std::collections::VecDeque;
 
     fn lex_parse_and_assert(string_slice: &str, expected: Expression) {
         let mut tokens = VecDeque::new();
@@ -219,7 +217,7 @@ mod test {
         let expression = parser.run(tokens);
         assert_eq!(expression, expected);
     }
-    
+
     fn lex_and_parse_only(string_slice: &str) {
         let mut tokens = VecDeque::new();
         {
@@ -232,31 +230,24 @@ mod test {
 
     #[test]
     fn nested_lambda() {
-        let expected = Expression::Lambda("x".into(), 
-            Box::new(
-                Expression::Lambda("y".into(), 
-                    Box::new(
-                        Expression::Application(
-                            vec![
-                                Expression::Variable("x".into()),
-                                Expression::Variable("y".into()),
-                                Expression::Variable("z".into()),
-                            ]
-                        )
-                    )
-                )
-            )
+        let expected = Expression::Lambda(
+            "x".into(),
+            Box::new(Expression::Lambda(
+                "y".into(),
+                Box::new(Expression::Application(vec![
+                    Expression::Variable("x".into()),
+                    Expression::Variable("y".into()),
+                    Expression::Variable("z".into()),
+                ])),
+            )),
         );
         lex_parse_and_assert("λx y.x y z", expected);
     }
 
     #[test]
     fn single_lambda_expression() {
-        let expected = Expression::Lambda("xy".into(),
-            Box::new(
-                Expression::Variable("xyz".into())
-            )
-        );
+        let expected =
+            Expression::Lambda("xy".into(), Box::new(Expression::Variable("xyz".into())));
         lex_parse_and_assert("λxy.xyz", expected);
     }
 
@@ -316,22 +307,16 @@ mod test {
 
     #[test]
     fn parse_lambda_x_dot_m_in_parenthesis() {
-        let expected = Expression::Lambda("x".into(),
-            Box::new(
-                Expression::Variable("M".into()),
-            )
-        );
+        let expected = Expression::Lambda("x".into(), Box::new(Expression::Variable("M".into())));
         lex_parse_and_assert("(λx.M)", expected);
     }
 
     #[test]
     fn parse_m_n_application_in_parenthesis() {
-        let expected = Expression::Application(
-            vec![
-                Expression::Variable("M".into()),
-                Expression::Variable("N".into()),
-            ]
-        );
+        let expected = Expression::Application(vec![
+            Expression::Variable("M".into()),
+            Expression::Variable("N".into()),
+        ]);
         lex_parse_and_assert("(M N)", expected);
     }
 
@@ -343,72 +328,62 @@ mod test {
 
     #[test]
     fn parse_lamda_x_dot_x() {
-        let expected = Expression::Lambda("x".into(),
-            Box::new(
-                Expression::Variable("x".into())
-            )
-        );
+        let expected = Expression::Lambda("x".into(), Box::new(Expression::Variable("x".into())));
         lex_parse_and_assert("λx.x", expected);
     }
 
     #[test]
     #[should_panic]
     fn multiline_expression_with_the_wrong_expected_tree() {
-        let expected = Expression::Application(
-            vec![
-                Expression::Lambda("x".into(),
-                    Box::new(
-                        Expression::Lambda("y".into(),
-                            Box::new(
-                                Expression::Application(
-                                    vec![
-                                        Expression::Variable("x".into()),
-                                        Expression::Variable("y".into()),
-                                    ]
-                                )
-                            )
-                        )
-                    )
-                ),
-                Expression::Variable("z".into()),
-            ]
-        );
-        lex_parse_and_assert(r#"
+        let expected = Expression::Application(vec![
+            Expression::Lambda(
+                "x".into(),
+                Box::new(Expression::Lambda(
+                    "y".into(),
+                    Box::new(Expression::Application(vec![
+                        Expression::Variable("x".into()),
+                        Expression::Variable("y".into()),
+                    ])),
+                )),
+            ),
+            Expression::Variable("z".into()),
+        ]);
+        lex_parse_and_assert(
+            r#"
 λx.(
     λy.
         x
         y
 )z
-"#, expected);
+"#,
+            expected,
+        );
     }
 
     #[test]
     fn parse_multiline_expression() {
-        let expected = Expression::Lambda("x".into(),
-            Box::new(
-                Expression::Application(
-                    vec![
-                        Expression::Lambda("y".into(),
-                            Box::new(
-                                Expression::Application(
-                                    vec![
-                                        Expression::Variable("x".into()),
-                                        Expression::Variable("y".into()),
-                                    ]
-                                )
-                            )
-                        ),
-                        Expression::Variable("z".into()),
-                    ]
-                )
-            )
+        let expected = Expression::Lambda(
+            "x".into(),
+            Box::new(Expression::Application(vec![
+                Expression::Lambda(
+                    "y".into(),
+                    Box::new(Expression::Application(vec![
+                        Expression::Variable("x".into()),
+                        Expression::Variable("y".into()),
+                    ])),
+                ),
+                Expression::Variable("z".into()),
+            ])),
         );
-        lex_parse_and_assert(r#"
+        lex_parse_and_assert(
+            r#"
 λx.(
     λy.
         x
         y
 )z
-"#, expected);
+"#,
+            expected,
+        );
     }
 }
