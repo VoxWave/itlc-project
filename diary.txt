@@ -113,7 +113,13 @@ it took me 8 or more minutes to write the journal entry.
 just might be able to finish the project. I just need to implement a print for Expression and then do the beta-reduction(?) interpreter.
 I think the last thing before sleeping is just finishing the tests.
 
-15 minutes of tests.
+15 minutes of tests but I didn't finish all of them.
+
+31.5
+44 minutes to finish the tests. The multiline expression was a good test for the parser too since the expected
+expression I constructed initially was actually wrong. I that test in as should_panic one. Initially it seemed
+that the test passed with that wrong AST but turns out I just forgot to actually do the assertion.
+So it seems I got the parser done with one take. Now I just need to do the interpreter.
 
 (I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
 I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
