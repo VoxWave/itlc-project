@@ -4,6 +4,12 @@ struct NameGen {
     cur: usize,
 }
 impl NameGen {
+    fn new() -> Self {
+        NameGen {
+            cur: 0,
+        }
+    }
+
     fn next(&mut self) -> String {
         let string = format!("#{}", self.cur);
         self.cur += 1;
@@ -132,8 +138,18 @@ fn beta_reduce(expr: Expression, name_gen: &mut NameGen) -> Option<Expression> {
                 }
             },
         Expression::Lambda(i, e) => {
-            
+            beta_reduce(*e, name_gen)
         },
         Expression::Variable(i) => None,
+    }
+}
+
+pub fn interpret(expr: Expression) {
+    println!("{:?}", expr);
+    let mut expression = expr;
+    let mut name_gen = NameGen::new();
+    while let Some(e) = beta_reduce(expression.clone(), &mut name_gen) {
+        println!("{:?}", e);
+        expression = e;
     }
 }
