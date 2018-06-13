@@ -46,17 +46,125 @@ Somewhere around 50-55 mins of first adding some tests to the project and then r
 I arrived to the lecture at 11:00.
 Coded tests during the excercise session up until 16:00.
 
+about 15 min of finishing the tests and merging
+
 22.5
 arrived 15 minutes late to the lecture.
 Did a 52 minute session of coding the project (parser).
 
+23.5
 13:53 arrived. 16:56 ended though I had something like a 15 to 20 minute break
 somewhere between there.
+
+25.5
+reading the book for 26 minutes. I realized I probably haven't been descriptive
+enough on what I've been doing so I'll try to elaborate more from now on. I haven't got very
+far in the book yet. Just now I got to the recursive definition of lambda calculus.
+I'll probably read more later today.
+
+28.5 
+57 min of coding overall(a bit of it extended to the next day actually).
+main progress:
+    - I realized I don't need to buffer up individual tokens because I can use the
+      states to store the necessary information for parsing.
+      I also brought back the parse_stack but with the token vec removed
+      for the same reason as above. the stack is used as memory to know 
+      on which subexpression level we are on so that we can form the ast
+      as we eat up more tokens.
+    - I started to flesh out the normal and lambda states.
+      normal is the initial state of the machine and depending on the
+      token we move on to other states. I also think that the parser
+      will return to normal state when a subexpression begins.
+      lamda state just expects an identifier and then moves on to a 
+      state that expects a dot or another identifier which will begin
+      another lambda expression.
+I realized updating the diary and creating the commit probably bumps
+the time spent to 1 hr.
+
+29.5
+45 minute session of coding the project. I'm still working on the parser.
+What I got stuck on is how I want to handle identifiers during normal parsing.
+Do I create a Incomplete::Expressions right away with the first identifier or do
+I store it to an optional field? I think I'll figure it out today.
+
+1 hr and 25 minutes worth of coding (there were breaks between but those are
+not counted in the time). I did figure it out. I initialize the parse stack with one
+Incomplete::Expressions when parsing. incomplete lambda also has a vec of expressions
+so that there's always a place to put the variable expression.
+the parser also now checks whether an vec of expressions only has one expression and
+then doesn't create an application out of that (Expression::Application was called Expressions earlier)
+but instead just moves the expression inside that vec up to the next Incomplete.
+
+I should also probably explain the basic idea with the parser and the parse_stack.
+If we encounter a thing that can have things inside it we create a new incomplete and
+push it on the stack. lambdas and brackets are these. when a closing thing comes up
+(right bracket or the tokens run out) we take the incomplete on top of the stack.
+convert it to an expression (as it it's now complete) and then put it in the incomplete
+that's above it. This way we sort of dive into subexpression levels as they start and
+when they start closing up we start swimming up and also bring back what we found in the dive.
+this will eventually form the AST.
+
+it took me 8 or more minutes to write the journal entry.
+
+30.5
+1 hr 12 minutes of coding the project. The parser seems to be done. Now I only need to test it and then move on to the intepreter.
+
+1 hr 21 minutes. Actually finished the parser. I copied the lexer test and now I'm converting them to test the parser. looks like I
+just might be able to finish the project. I just need to implement a print for Expression and then do the beta-reduction(?) interpreter.
+I think the last thing before sleeping is just finishing the tests.
+
+15 minutes of tests but I didn't finish all of them (I forgot to stopwatch time this one).
+
+31.5
+44 minutes to finish the tests. The multiline expression was a good test for the parser too since the expected
+expression I constructed initially was actually wrong. I that test in as should_panic one. Initially it seemed
+that the test passed with that wrong AST but turns out I just forgot to actually do the assertion.
+So it seems I got the parser done with one take. Now I just need to do the interpreter.
+
+59 minutes of reading the slides and conversing with delma trying to actually make sense on what exactly are the things I need to 
+do with the interpreter.
+
+20 minutes for first function of interpreter. forgot to time it...
+
+1 hr 15 minutes. I got the renaming, alpha conversion and substitution done with a little guidance from delma.
+Mainly I haven't gotten very deep in the book and I wasn't able to infer everything I need from the slides so
+I needed delmas help on what exactly were the sub parts of beta reduction and what I needed to do in each of them.
+I had a fuzzy picture of what was supposed to happen but I didn't remember the specifics. In the end he just showed
+me the function signatures and maybe gave some explanation on what it was supposed to do and from there I was able to figure out
+the implementation myself. 
+
+1 hr 3 minutes of coding. I got the one third of the beta reduction logic done. The deadline is closing in so I though I would wrap
+up the course and write the last diary entry. So the project at the deadline is almost complete but not runable. I hope the code is
+interesting to look at.
+
+For this last entry I think it is appropriate to do a retrospective on the whole course.
+
+What have I actually learned:
+    - What lambda calculus is at least on a basic level 
+      (You have expressions that can be contructed with certain rules. You have rules for how you can transform an expression into another 
+      and there are expressions that can't be transformed any further. If you start applying these rules over and over what you're doing
+      starts to look like computation. In fact sometimes an untransformable (beta-normal) form can't be achieved and you can't create an
+      algorithm that would tell you for all lambda expressions if that expression reduces to a beta-normal form(halting problem). I do quite
+      agree with the lecturer that lambda calculus is kind of the machine language of functional programming)
+    - How I can implement a interpreter for lambda calculus
+    - psytrance works for me as coding music.
+    - I don't need caffeine.
+
+There's probably more I've learned but I'm a bit tired. Overall this was a very fun course and I feel like I didn't go away empty handed.
+23 minutes to write the last diary entry.
+
+
+
+
+(I used a stopwatch on my phone to time my coding session times, but I sometimes shaved of some minutes is I caught myself slacking.
+I also stopped and started the timer again when I took deliberate breaks. if there are two "session" times for a day then that just
+means that I reseted the timer in between and possibly slacked off for a longer period of time)
 
 Grading of the lecturer:
 4?
 Not a perfect grade but very good. maybe even somewhere between 4 and 5 if 
-using floats instead of integers are allowed.
+using floats instead of integers is allowed.
+edit: now that I think about it, a perfect score isn't needed to get a 5. so 5.
 
 Pros:
   Explains things very well when he has thought things through.

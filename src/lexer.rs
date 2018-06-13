@@ -3,8 +3,8 @@ use std::fmt;
 
 #[derive(PartialEq)]
 pub struct Token {
-    token_type: TokenType,
-    position: Position,
+    pub token_type: TokenType,
+    pub position: Position,
 }
 
 impl Token {
@@ -65,7 +65,7 @@ pub enum TokenType {
     Identifier(String),
 }
 
-struct Lexer<O>
+pub struct Lexer<O>
 where
     O: Sink<Result<Token, LexError>>,
 {
@@ -80,7 +80,7 @@ impl<O> Lexer<O>
 where
     O: Sink<Result<Token, LexError>>,
 {
-    fn new(token_sink: O) -> Lexer<O> {
+    pub fn new(token_sink: O) -> Lexer<O> {
         Lexer {
             token_sink,
             buffer: String::new(),
@@ -90,7 +90,7 @@ where
         }
     }
 
-    fn run<I>(&mut self, mut char_source: I)
+    pub fn run<I>(&mut self, mut char_source: I)
     where
         I: Source<char>,
     {
@@ -154,10 +154,6 @@ where
 
     fn identifier(&mut self, c: char) -> State<Lexer<O>, char> {
         match c {
-            c if c.is_alphanumeric() => {
-                self.buffer.push(c);
-                State(Self::identifier)
-            }
             c if c.is_whitespace() || c == '\\' || c == 'λ' || c == '(' || c == ')'
                 || c == '.' =>
             {
@@ -169,6 +165,10 @@ where
                 let token = Token::new(token_type, position);
                 self.token_sink.put(Ok(token));
                 self.normal(c)
+            }
+            c if c.is_alphanumeric() => {
+                self.buffer.push(c);
+                State(Self::identifier)
             }
             _ => {
                 let position = self.get_current_position();
@@ -235,6 +235,16 @@ mod test {
             lexer.run(string_slice.to_string());
         }
         assert_eq!(sink, *expected);
+    }
+
+    #[test]
+    fn identifier_lambda_identifier() {
+        let expected = construct_expected!(
+            TokenType::Identifier("xy".into()), (0, 0), (0, 1);
+            TokenType::Lambda, (0, 2), (0, 2);
+            TokenType::Identifier("xy".into()), (0, 3), (0, 4);
+        );
+        lex_and_assert("xyλxy", &expected);
     }
 
     #[test]
@@ -383,8 +393,8 @@ mod test {
 
     #[test]
     fn lex_multiline_expression() {
-        use self::TokenType::*;
         use self::Direction::*;
+        use self::TokenType::*;
         let expected = construct_expected!(
             Lambda, (1, 0), (1, 0);
             Identifier("x".into()), (1, 1), (1, 1);
@@ -399,15 +409,14 @@ mod test {
             Identifier("z".into()), (5, 1), (5, 1);
         );
         lex_and_assert(
-r#"
+            r#"
 λx.(
     λy.
         x
         y
 )z
-"#
-, 
-            &expected
+"#,
+            &expected,
         );
     }
 
