@@ -1,3 +1,4 @@
+use file::CharFile;
 use std::collections::VecDeque;
 use std::ops::Deref;
 use std::sync::mpsc::Receiver;
@@ -36,8 +37,6 @@ impl Source<char> for String {
         }
     }
 }
-
-impl Source<char> for 
 
 impl<T> Source<T> for VecDeque<T> {
     fn take(&mut self) -> Option<T> {
