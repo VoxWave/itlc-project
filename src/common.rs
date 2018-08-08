@@ -1,3 +1,4 @@
+use file::CharFile;
 use std::collections::VecDeque;
 use std::ops::Deref;
 use std::sync::mpsc::Receiver;
@@ -52,6 +53,7 @@ impl<T> Source<T> for Receiver<T> {
         self.recv().ok()
     }
 }
+
 
 /// ´Sink´s are things take take in some type T. Generaly Sinks are used in tandem
 /// with sources so that if something is put into a sink it should appear in a source somewhere.

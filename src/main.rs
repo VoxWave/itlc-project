@@ -4,9 +4,10 @@ use parser::Parser;
 use interpreter::interpret;
 
 mod common;
-mod interpreter;
+mod file;
 mod lexer;
 mod parser;
+mod interpreter;
 
 fn main() {
     thread::spawn(move || {
