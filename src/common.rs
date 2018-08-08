@@ -27,13 +27,17 @@ impl<T> Source<T> for Vec<T> {
     }
 }
 
+//TODO: figure out an implementation an efficient implementation where you don't have to reverse the string beforehand.
 impl Source<char> for String {
+    // fn take(&mut self) -> Option<char> {
+    //     if self.is_empty() {
+    //         None
+    //     } else {
+    //         Some(self.remove(0))
+    //     }
+    // }
     fn take(&mut self) -> Option<char> {
-        if self.is_empty() {
-            None
-        } else {
-            Some(self.remove(0))
-        }
+        self.pop()
     }
 }
 
